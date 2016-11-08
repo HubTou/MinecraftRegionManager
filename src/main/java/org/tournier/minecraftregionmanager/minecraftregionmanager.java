@@ -316,7 +316,7 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
 	private String getUniqueWorldName(World w) {
 	////////////////////////////////////////////
 		// Build a truly unique world name
-		// With the LOTR mod, there are 3 world named "world":
+		// With the LOTR mod, there are 3 worlds named "world":
 		//   'world'/Overworld
 		//   'world'/Utumno
 		//   'world'/MiddleEarth
