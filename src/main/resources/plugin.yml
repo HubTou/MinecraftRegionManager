@@ -1,0 +1,62 @@
+name: MinecraftRegionManager
+version: 0.9
+description: "This plugin aims to simplify Minecraft server map backup and restore."
+author: HubTou
+website: http://lotr-minecraft-mod-exiles.wikia.com/wiki/Minecraft_Region_Manager
+main: org.tournier.minecraftregionmanager.minecraftregionmanager
+commands:
+  showlocation:
+    description: "This command displays a 32x32 minimap of your current region with the marked chunks inside, and a 16x16 minimap of your location in the current chunk."
+    aliases: hsl
+    usage: "/showlocation or /hsl"
+  markregion:
+    description: "This command marks the region you are in for later backup."
+    aliases: hmr
+    usage: "/markregion or /hmr [name]"
+  markchunk:
+    description: "This command marks the chunk you are in for later backup."
+    aliases: hmc
+    usage: "/markchunk or /hmc [name]"
+  markarea:
+    description: "This command marks the chunks contained in the area defined by your location at your second call for later backup."
+    aliases: hma
+    usage: "/markarea or /hma [name]"
+  unmarkregion:
+    description: "This command unmarks the region you are in for later backup."
+    aliases: hur
+    usage: "/unmarkregion or /hur"
+  unmarkchunk:
+    description: "This command unmarks the chunk you are in for later backup."
+    aliases: huc
+    usage: "/unmarkchunk or /huc"
+  unmarkarea:
+    description: "This command unmarks the area(s) you are in for later backup."
+    aliases: hua
+    usage: "/unmarkarea or /hua"
+  listmarks:
+    description: "This command lists all region, chunks and areas you have marked."
+    aliases: hlm
+    usage: "/listmarks or /hlm"
+  reportregion:
+    description: "This command marks the region you are in for admin action."
+    aliases: hrr
+    usage: |
+      /reportregion or /hrr [reason]
+        generation - for reporting a generation issue (cliff at the border, wrong biome)
+        griefing - for reporting a griefing issue (vandalism)
+        offensive - for reporting an offensive build / sign issue
+        corruption - for a corrupted region issue (crash, fall in the void)
+  reportchunk:
+    description: "This command marks the chunk you are in for admin action."
+    aliases: hrc
+    usage: |
+      /reportchunk or /hrc [reason]
+        generation - for reporting a generation issue (cliff at the border, wrong biome)
+        griefing - for reporting a griefing issue (vandalism)
+        offensive - for reporting an offensive build / sign issue
+        corruption - for a corrupted chunk issue (crash, fall in the void)
+  namepoi:
+    description: "This command names and describes a Point of Interest to be displayed on a map."
+    aliases: hnp
+    usage: "/namepoi or /hnp"
+    
