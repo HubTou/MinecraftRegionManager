@@ -4,6 +4,6 @@
  * The first release provides all the marking functions.
  *
  * @author HubTou
- * @version 0.9
+ * @version 0.91
  */
 package org.tournier.minecraftregionmanager;

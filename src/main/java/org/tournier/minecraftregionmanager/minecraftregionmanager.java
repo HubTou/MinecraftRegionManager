@@ -1,7 +1,5 @@
 package org.tournier.minecraftregionmanager;
 
-// TODO free reported spots lists
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,8 +26,6 @@ import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class minecraftregionmanager extends JavaPlugin implements Listener {
-	
-	private static final int AREA_MARK_MAX_LENGTH = 64;
 	
 	private HashMap<String, AreaMark> playersPartialAreaMark = new HashMap<String, AreaMark>();
 	private HashMap<String, LinkedList<AreaMark>> playersAreaMarks = new HashMap<String, LinkedList<AreaMark>>();
@@ -167,18 +163,14 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
 	}
 	
 	/////////////////////////////////////////////////
-	private void freePlayerMarks(String playerName) {
+	private void emptyPlayerMarks(String playerName) {
 	/////////////////////////////////////////////////
-        // Perhaps overdoing it!
-        
 		// Get the marked regions list for this player
     	LinkedList<RegionMark> regionMarks = playersRegionMarks.get(playerName);
     	// Empty it
     	regionMarks.clear();    	        
 		// Put it back in the full list
 		playersRegionMarks.put(playerName, regionMarks);
-		// Remove the hash entry for this player
-    	playersRegionMarks.remove(playerName);
 
 		// Get the marked chunks list for this player
     	LinkedList<ChunkMark> chunkMarks = playersChunkMarks.get(playerName);
@@ -186,8 +178,6 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
     	chunkMarks.clear();    	        
 		// Put it back in the full list
 		playersChunkMarks.put(playerName, chunkMarks);
-		// Remove the hash entry for this player
-        playersChunkMarks.remove(playerName);
 
 		// Get the marked areas list for this player
     	LinkedList<AreaMark> areaMarks = playersAreaMarks.get(playerName);
@@ -195,7 +185,17 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
     	areaMarks.clear();    	        
 		// Put it back in the full list
 		playersAreaMarks.put(playerName, areaMarks);
-		// Remove the hash entry for this player
+	}
+
+	/////////////////////////////////////////////////
+	private void freePlayerMarks(String playerName) {
+	/////////////////////////////////////////////////
+		// Remove all marks declared by this player 
+		emptyPlayerMarks(playerName);
+		
+		// Remove the hash entries for this player
+    	playersRegionMarks.remove(playerName);
+        playersChunkMarks.remove(playerName);
         playersAreaMarks.remove(playerName);
 	}
 
@@ -360,6 +360,9 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
         } else {
         	directory.mkdirs();
     	}
+
+        // Save a copy of the default config.yml if one is not there
+        this.saveDefaultConfig();
     	
     	// Load admin reports
     	try {
@@ -398,8 +401,8 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
     @EventHandler
     public void onWorldSave(WorldSaveEvent event) {
     ///////////////////////////////////////////////
-    	// Hooking on this event provides a way to save marks to disk every 5 minutes
-        // TODO: would be better to do it asynchronously
+    	// Hooking on this event provides a way to do things every 5 minutes
+    	
     	String w = getUniqueWorldName(event.getWorld());
 
     	// Only do it when saving the Overworld, not for the Nether, the End or other dimensions
@@ -413,12 +416,16 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
 					e.printStackTrace();
 				}
     		}
-    		        	
+    		
+    		// Write reports to the admin
         	try {
     			saveAdminReports();
     		} catch (Exception e) {
     			e.printStackTrace();
     		}
+        	
+        	// Reload config file in case it has changed
+        	this.reloadConfig();
     	}
     }
 
@@ -603,6 +610,8 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
     				partialAreaMark = new AreaMark(w, cx, cz, 0, 0, n);
     				playersPartialAreaMark.put(player.getName(), partialAreaMark);
     			} else {
+    				int areaMarkMaxLength = this.getConfig().getInt("area_mark_max_length");
+    				
     				// Second call
         			partialAreaMark.setX2(cx);
         			partialAreaMark.setZ2(cz);
@@ -619,8 +628,8 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
             			sender.sendMessage("Sorry, this area is multi dimensional, which is not allowed!");     				
         			}
         			// Check if the marked area exceeds allowed height or width
-        			else if ((Math.abs(cx - partialAreaMark.getX1() + 1)) > AREA_MARK_MAX_LENGTH || (Math.abs(cz - partialAreaMark.getZ1() + 1)) > AREA_MARK_MAX_LENGTH) {
-            			sender.sendMessage("Sorry, this area exceeds the allowed height or width of " + AREA_MARK_MAX_LENGTH + " chunks");
+        			else if ((Math.abs(cx - partialAreaMark.getX1() + 1)) > areaMarkMaxLength || (Math.abs(cz - partialAreaMark.getZ1() + 1)) > areaMarkMaxLength) {
+            			sender.sendMessage("Sorry, this area exceeds the allowed height or width of " + areaMarkMaxLength + " chunks");
         			} else {
             			// Get the marked areas list for this player
             	    	LinkedList<AreaMark> areaMarks = playersAreaMarks.get(player.getName());
@@ -756,6 +765,16 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
     		return true;
     	}
     	
+    	else if (cmd.getName().equalsIgnoreCase("unmarkeverything") || cmd.getName().equalsIgnoreCase("hue")) {
+    		if (!(sender instanceof Player)) {
+    			sender.sendMessage("This command can only be run by a player.");
+    		} else {
+    			Player player = (Player) sender;
+    			emptyPlayerMarks(player.getName());
+    		}
+    		return true;
+    	}
+    			
     	else if (cmd.getName().equalsIgnoreCase("listmarks") || cmd.getName().equalsIgnoreCase("hlm")) {
     		if (!(sender instanceof Player)) {
     			sender.sendMessage("This command can only be run by a player.");
@@ -908,13 +927,50 @@ public final class minecraftregionmanager extends JavaPlugin implements Listener
     		return true;
     	}
     	
+    	else if (cmd.getName().equalsIgnoreCase("listreports") || cmd.getName().equalsIgnoreCase("hlr")) {
+    		if (!(sender instanceof Player)) {
+    			sender.sendMessage("This command can only be run by a player.");
+    		} else if (! sender.isOp()) {
+    			sender.sendMessage("This command can only be run by an operator.");
+    		} else {
+    			Player player = (Player) sender;
+    			boolean firstRegion = true;
+    			boolean firstChunk = true;
+   			
+    	        sender.sendMessage("");
+
+    	        // Print the reported regions list
+    	        Iterator<ReportedSpot> i = reportedRegions.iterator();
+    	        while(i.hasNext()){
+    	        	ReportedSpot s = i.next();
+    	        	if (firstRegion == true) {
+    	    	        sender.sendMessage("Reported regions: =====================================================");
+    	    	        firstRegion = false;
+    	        	}
+        			player.sendMessage(" " + s.printMark());
+    	        }
+
+    	        // Print the reported chunks list
+    	        Iterator<ReportedSpot> j = reportedChunks.iterator();
+    	        while(j.hasNext()){
+    	        	ReportedSpot s = j.next();
+    	        	if (firstChunk == true) {
+    	    	        sender.sendMessage("Reported chunks: =====================================================");
+    	    	        firstChunk = false;
+    	        	}
+        			player.sendMessage(" " + s.printMark());
+    	        }
+    		}
+    		return true;
+    	}
+    			
     	else if (cmd.getName().equalsIgnoreCase("namepoi") || cmd.getName().equalsIgnoreCase("hnp")) {
     		if (!(sender instanceof Player)) {
     			sender.sendMessage("This command can only be run by a player.");
     		} else {
     			Player player = (Player) sender;
     			sender.sendMessage("Sorry. This command is not implemented yet. Should be soon!");
-    			// do something
+    			// TODO
     		}
     		return true;
     	}
