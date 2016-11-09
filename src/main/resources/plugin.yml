@@ -1,5 +1,5 @@
 name: MinecraftRegionManager
-version: 0.9
+version: 0.91
 description: "This plugin aims to simplify Minecraft server map backup and restore."
 author: HubTou
 website: http://lotr-minecraft-mod-exiles.wikia.com/wiki/Minecraft_Region_Manager
@@ -22,17 +22,21 @@ commands:
     aliases: hma
     usage: "/markarea or /hma [name]"
   unmarkregion:
-    description: "This command unmarks the region you are in for later backup."
+    description: "This command unmarks the region you are in."
     aliases: hur
     usage: "/unmarkregion or /hur"
   unmarkchunk:
-    description: "This command unmarks the chunk you are in for later backup."
+    description: "This command unmarks the chunk you are in."
     aliases: huc
     usage: "/unmarkchunk or /huc"
   unmarkarea:
-    description: "This command unmarks the area(s) you are in for later backup."
+    description: "This command unmarks the area(s) you are in."
     aliases: hua
     usage: "/unmarkarea or /hua"
+  unmarkeverything:
+    description: "This command unmarks all your regions, chunks and areas."
+    aliases: hue
+    usage: "/unmarkeverything or /hue"
   listmarks:
     description: "This command lists all region, chunks and areas you have marked."
     aliases: hlm
@@ -55,6 +59,10 @@ commands:
         griefing - for reporting a griefing issue (vandalism)
         offensive - for reporting an offensive build / sign issue
         corruption - for a corrupted chunk issue (crash, fall in the void)
+  listreports:
+    description: "This operator-only command lists all reported spots."
+    aliases: hlr
+    usage: "/listreports or /hlr"
   namepoi:
     description: "This command names and describes a Point of Interest to be displayed on a map."
     aliases: hnp
