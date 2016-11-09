@@ -12,9 +12,9 @@ Developed with Java 1.8 (recompile if your server is running under a lower versi
 Versions and changelog
 ======================
 	0.91	2016-11-09	Added a config.yml file for admin modifiable configuration
-				Added a /unmarkeverything command for testing players
-				Added a /listreports command for admins
-	0.9	2016-11-08	Initial public release
+						Added a /unmarkeverything command for testing players
+						Added a /listreports command for admins
+	0.9		2016-11-08	Initial public release
 
 License
 =======
