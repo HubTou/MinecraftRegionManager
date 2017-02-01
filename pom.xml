@@ -2,7 +2,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.tournier</groupId>
   <artifactId>MinecraftRegionManager</artifactId>
-  <version>0.91</version>
   <build>
     <plugins>
       <plugin>
@@ -30,4 +29,5 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <version>1.00</version>
 </project>
