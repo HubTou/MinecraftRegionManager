@@ -4,7 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.UUID;
 
-public class ReportedSpot {
+public class ReportedSpot
+{
 	// A reported spot is defined by 4 items:
 	private String worldName;
 	private int x, z;
@@ -14,7 +15,8 @@ public class ReportedSpot {
 	private LinkedList<UUID> reportingPlayers;
 	
 	// Constructor
-    public ReportedSpot(String world, int sx, int sz, String reason, UUID id) {
+    public ReportedSpot(String world, int sx, int sz, String reason, UUID id)
+    {
         worldName = world;
         x = sx;
         z = sz;
@@ -23,46 +25,53 @@ public class ReportedSpot {
         reportingPlayers.addLast(id);
     }
     
-    public String getWorldName() {
+    public String getWorldName()
+    {
     	return worldName;
     }
     
-    public int getX() {
+    public int getX()
+    {
     	return x;
     }
     
-    public int getZ() {
+    public int getZ()
+    {
     	return z;
     }
     
-    public String getReportReason() {
+    public String getReportReason()
+    {
     	return reportReason;
     }
     
-    public LinkedList<UUID> getReportingPlayers() {
+    public LinkedList<UUID> getReportingPlayers()
+    {
     	return reportingPlayers;
     }
     
-    public boolean IsPlayerAmongReporters(UUID id) {
+    public boolean IsPlayerAmongReporters(UUID id)
+    {
         Iterator<UUID> i = reportingPlayers.iterator();
-        while(i.hasNext()){
+        while(i.hasNext())
+        {
         	UUID u = i.next();
-        	if (u.equals(id)) {
+        	if (u.equals(id))
         		return true;
-        	}
         }
     	return false;
     }
 
-    public void AddReporter(UUID id) {
+    public void AddReporter(UUID id)
+    {
     	reportingPlayers.addLast(id);
     }
     
-    public String printMark() {
+    public String printMark()
+    {
     	String s = worldName + ":" + x + "," + z + ":" + reportReason + " (reported by " + reportingPlayers.size() + " player";
-    	if (reportingPlayers.size() > 1) {
+    	if (reportingPlayers.size() > 1)
     		s += "s";
-    	}
     	s += ")";
     	return s;
     }
