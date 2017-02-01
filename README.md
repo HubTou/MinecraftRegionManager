@@ -16,9 +16,9 @@ Versions and changelog
 	                  	Modified the /showlocation command to indicate if a region/chunk is marked
 	                  	Modified the /markarea command to say something after first corner marking
 	0.91	2016-11-09	Added a config.yml file for admin modifiable configuration
-				Added a /unmarkeverything command for testing players
-				Added a /listreports command for admins
-	0.9	2016-11-08	Initial public release
+					Added a /unmarkeverything command for testing players
+					Added a /listreports command for admins
+	0.9		2016-11-08	Initial public release
 
 License
 =======
