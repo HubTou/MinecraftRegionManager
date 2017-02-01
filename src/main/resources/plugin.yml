@@ -1,5 +1,5 @@
 name: MinecraftRegionManager
-version: 0.91
+version: 1.00
 description: "This plugin aims to simplify Minecraft server map backup and restore."
 author: HubTou
 website: http://lotr-minecraft-mod-exiles.wikia.com/wiki/Minecraft_Region_Manager
@@ -66,5 +66,15 @@ commands:
   namepoi:
     description: "This command names and describes a Point of Interest to be displayed on a map."
     aliases: hnp
-    usage: "/namepoi or /hnp"
-    
+    usage: "/namepoi or /hnp [name]"
+  resetmap:
+    description: "This command lists worlds that can be resetted, or reset the specified one keeping only marked items."
+    usage: |
+      resetmap
+      resetmap [world-uid]
+  verifyregion:
+    description: "This command loads a region file and verify its integrity."
+    aliases: hvr
+    usage: |
+      verifyregion or /hvr [world-name]
+      verifyregion or /hvr [world-name] [rx] [rz] 
